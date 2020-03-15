@@ -82,7 +82,7 @@ public class GenerateTestFile {
 			output.add(generateInput());
 		}
 
-		System.out.println(Arrays.toString(output.toArray()));
+		output.add(0, "Name, Vendor, Price, Department Rate");
 		try {
 			Files.write(outFile.toPath(), output, Charset.defaultCharset());
 		} catch (IOException e) {
