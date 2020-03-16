@@ -3,12 +3,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Custom test file generation for CS25100SP20 Project 03
+ * Custom test file generation for CS25100-Spring2020 Project 03
  *
  * @author kedarabhyankar
  * @version 3/14/2020
@@ -27,10 +27,13 @@ public class GenerateTestFile {
 			"pineapple", "plum", "prune", "raisin", "raspberry", "tangerine"};
 	private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	private static final String FILENAME_TO_GENERATE = "custom_test.txt";
+	private static String[] ratings;
 
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
+		ratings = new String[NUM_DEPARTMENT_RATINGS];
+		fillRatings();
 		System.out.println("How many products would you like to generate?");
 		String numToGenerate = scan.nextLine();
 		if (verifyNumberWithinBounds(numToGenerate)) {
@@ -167,12 +170,33 @@ public class GenerateTestFile {
 	 * @return The String array representative of the pseudo-randomly generated product department ratings.
 	 */
 	private static String[] generateRatings() {
-		Random rand = new Random();
-		String[] ratings = new String[NUM_DEPARTMENT_RATINGS];
+		ArrayList<String> preShuffle = new ArrayList<>();
+		//noinspection ManualArrayToCollectionCopy
+		for (String rating : ratings) {
+			//noinspection UseBulkOperation
+			preShuffle.add(rating);
+		}
+		Collections.shuffle(preShuffle);
 		for (int i = 0; i < ratings.length; i++) {
-			ratings[i] = Integer.toString(rand.nextInt((MAXIMUM_DEPARTMENT_RATING - MINIMUM_DEPARTMENT_RATING)) + 1);
+			ratings[i] = preShuffle.get(i);
 		}
 		return ratings;
+	}
+
+
+	/**
+	 * Fills the ratings array once, with a randomized input - the input will be shuffled on each product's generation,
+	 * but the original input will be generated once, at the start of the program's execution.
+	 * <p>
+	 * Added based on Anonymous Comp's comment, accessible on Piazza @503, comment _f1
+	 */
+	private static void fillRatings() {
+		Random rand = new Random();
+		for (int i = 0; i < ratings.length; i++) {
+			ratings[i] = Integer.toString(
+					rand.nextInt((MAXIMUM_DEPARTMENT_RATING - MINIMUM_DEPARTMENT_RATING) + 1) +
+							MINIMUM_DEPARTMENT_RATING);
+		}
 	}
 
 
